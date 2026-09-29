@@ -1,6 +1,10 @@
-# SkillForge — Full Stack Development Course 🚀
+# Abbas Skill Platform — Full Stack Development Course 🚀
 
-A modern, responsive e-learning web platform for Full Stack Development featuring dual-language instruction in **Hindi** and **Tamil**.
+<p align="center">
+  <img src="logo.jpg" alt="Abbas Skill Platform Logo" width="160" style="border-radius:18px;" />
+</p>
+
+A modern, responsive e-learning web platform for Full Stack Development by **Abbas Skill Platform**, featuring dual-language instruction in **Hindi** and **Tamil**.
 
 ## 🌟 Features
 

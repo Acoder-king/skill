@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>SkillForge — Full Stack Development Course | Learn in Hindi & Tamil</title>
-<meta name="description" content="Complete Full Stack Development Course with video lessons in Hindi and Tamil. Learn HTML, CSS, JavaScript, React, Python and more.">
+<title>Abbas Skill Platform — Full Stack Development Course | Learn in Hindi & Tamil</title>
+<meta name="description" content="Complete Full Stack Development Course by Abbas Skill Platform with 160+ video lessons in Hindi and Tamil. Learn HTML, CSS, JavaScript, React, Python and more.">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="apple-touch-icon" href="logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -161,27 +163,57 @@ ul{list-style:none;}
   min-width:0;
 }
 .logo{
-  display:flex;
+  display:inline-flex;
   align-items:center;
-  gap:8px;
-  font-weight:800;
-  font-size:clamp(1rem,3.2vw,1.15rem);
-  color:var(--navy);
-  white-space:nowrap;
+  gap:10px;
+  background:transparent;
+  border:none;
+  cursor:pointer;
   user-select:none;
+  padding:2px 4px;
+  border-radius:12px;
+  transition:all var(--transition);
+  text-align:left;
+  min-width:0;
 }
-.logo-mark{
-  width:34px;
-  height:34px;
+.logo:hover{opacity:.95;}
+.brand-logo-img{
+  width:42px;
+  height:42px;
   border-radius:10px;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:.78rem;
-  font-weight:900;
+  object-fit:cover;
+  background:#fff;
+  box-shadow:0 3px 12px -2px rgba(29,78,216,.28);
+  border:1.5px solid rgba(29,78,216,.18);
   flex-shrink:0;
+  transition:transform var(--transition),box-shadow var(--transition);
+}
+.logo:hover .brand-logo-img{
+  transform:scale(1.05);
+  box-shadow:0 5px 16px -2px rgba(29,78,216,.4);
+}
+.brand-text{
+  display:flex;
+  flex-direction:column;
+  line-height:1.05;
+  min-width:0;
+}
+.brand-name{
+  font-size:1.12rem;
+  font-weight:900;
+  letter-spacing:.04em;
+  color:var(--navy);
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.brand-tag{
+  font-size:.62rem;
+  font-weight:800;
+  letter-spacing:.12em;
+  color:var(--primary);
+  text-transform:uppercase;
+  white-space:nowrap;
+  margin-top:2px;
 }
 .main-nav{
   display:none;
@@ -269,8 +301,10 @@ ul{list-style:none;}
   .header-inner{gap:6px;}
   .header-left{gap:6px;}
   .hamburger{width:36px;height:36px;}
-  .logo{gap:6px;font-size:clamp(.88rem, 3.2vw, 1.05rem);}
-  .logo-mark{width:30px;height:30px;font-size:.72rem;border-radius:8px;}
+  .logo{gap:8px;}
+  .brand-logo-img{width:36px;height:36px;border-radius:8px;}
+  .brand-name{font-size:.96rem;}
+  .brand-tag{font-size:.56rem;letter-spacing:.08em;}
   .header-right{gap:4px;}
   .icon-btn{width:36px;height:36px;}
   .lang-toggle{padding:2px;gap:2px;border-radius:8px;}
@@ -284,8 +318,10 @@ ul{list-style:none;}
   .lang-name-full{display:inline !important;}
   .lang-name-short{display:none !important;}
 }
-@media(max-width:500px){
-  .logo-text{display:none;}
+@media(max-width:480px){
+  .brand-tag{display:none;}
+  .brand-logo-img{width:32px;height:32px;}
+  .brand-name{font-size:.88rem;}
   .lang-btn{padding:3px 7px;font-size:.72rem;}
 }
 @media(min-width:900px){
@@ -1003,11 +1039,47 @@ ul{list-style:none;}
 /* ============ FOOTER ============ */
 .site-footer{
   border-top:1px solid var(--border);
-  padding:28px 0;
-  text-align:center;
+  padding:32px 0;
   color:var(--slate-500);
   font-size:.82rem;
   margin-top:40px;
+  background:var(--surface);
+  transition:background var(--transition),border-color var(--transition);
+}
+.footer-content{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+  text-align:center;
+}
+.footer-brand{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  user-select:none;
+}
+.footer-logo-img{
+  width:36px;
+  height:36px;
+  border-radius:8px;
+  object-fit:cover;
+  background:#fff;
+  border:1.5px solid rgba(29,78,216,.2);
+  box-shadow:0 2px 8px rgba(29,78,216,.15);
+}
+.footer-copy{
+  color:var(--slate-500);
+  font-size:.82rem;
+  line-height:1.5;
+  max-width:620px;
+}
+@media(min-width:768px){
+  .footer-content{
+    flex-direction:row;
+    justify-content:space-between;
+    text-align:left;
+  }
 }
 
 /* ============ PAGES ============ */
@@ -1023,9 +1095,12 @@ ul{list-style:none;}
   <div class="container header-inner">
     <div class="header-left">
       <button class="hamburger" id="hamburger-btn" aria-label="Open menu"></button>
-      <button class="logo" data-page="dashboard">
-        <span class="logo-mark">SF</span>
-        <span class="logo-text">SkillForge</span>
+      <button class="logo" data-page="dashboard" aria-label="Abbas Skill Platform">
+        <img src="logo.jpg" alt="Abbas Skill Platform Logo" class="brand-logo-img">
+        <span class="brand-text">
+          <span class="brand-name">ABBAS</span>
+          <span class="brand-tag">SKILL PLATFORM</span>
+        </span>
       </button>
     </div>
     <nav class="main-nav" aria-label="Main navigation" id="main-nav"></nav>
@@ -1051,8 +1126,11 @@ ul{list-style:none;}
 <aside class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
   <div class="mobile-nav-header">
     <div class="logo">
-      <span class="logo-mark">SF</span>
-      <span>SkillForge</span>
+      <img src="logo.jpg" alt="Abbas Skill Platform Logo" class="brand-logo-img">
+      <span class="brand-text">
+        <span class="brand-name">ABBAS</span>
+        <span class="brand-tag">SKILL PLATFORM</span>
+      </span>
     </div>
     <button class="icon-btn" id="mobile-close" aria-label="Close menu"></button>
   </div>
@@ -1089,7 +1167,7 @@ ul{list-style:none;}
   <div class="hero">
     <div class="container hero-inner">
       <div class="hero-text">
-        <span class="eyebrow">🎓 Full Stack Development Course — 4 Months</span>
+        <span class="eyebrow">🚀 Abbas Skill Platform • 4-Month Full Stack Course</span>
         <h1>Master Full Stack Development. <span class="text-gradient">Learn in Your Language.</span></h1>
         <p>Complete AI-enabled course with 200+ video lessons in Hindi & Tamil. From HTML basics to React, Python & beyond — everything you need to become a job-ready developer.</p>
         <div class="hero-actions">
@@ -1132,7 +1210,16 @@ ul{list-style:none;}
 </main>
 
 <footer class="site-footer">
-  <div class="container">© 2025 SkillForge — AI Enabled Full Stack Development Course by AspiraSys. Your progress is saved locally.</div>
+  <div class="container footer-content">
+    <div class="footer-brand">
+      <img src="logo.jpg" alt="Abbas Skill Platform Logo" class="footer-logo-img">
+      <span class="brand-text">
+        <span class="brand-name" style="font-size:1rem;">ABBAS</span>
+        <span class="brand-tag" style="font-size:.58rem;">SKILL PLATFORM</span>
+      </span>
+    </div>
+    <p class="footer-copy">© 2025 Abbas Skill Platform — AI Enabled Full Stack Development Course. All progress is saved automatically.</p>
+  </div>
 </footer>
 
 <!-- ============ MOBILE BOTTOM NAVIGATION ============ -->
