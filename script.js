@@ -40,7 +40,9 @@
         award: '<circle cx="12" cy="8" r="5"/><path d="M8 13l-2 7 6-3 6 3-2-7"/>',
         shield: '<path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><polyline points="9 12 11 14 15 10"/>',
         cloud: '<path d="M7 18a4 4 0 010-8 6 6 0 0111.5-1.5A4.5 4.5 0 0117 18H7z"/>',
-        palette: '<path d="M12 2a10 10 0 000 20c1.5 0 2-1 2-2s-.5-1.5-.5-2 .5-1 1.5-1h2a3 3 0 003-3c0-6-4-12-8-12z"/><circle cx="7" cy="10" r="1" fill="currentColor"/><circle cx="9" cy="6" r="1" fill="currentColor"/><circle cx="15" cy="6" r="1" fill="currentColor"/><circle cx="17" cy="10" r="1" fill="currentColor"/>'
+        palette: '<path d="M12 2a10 10 0 000 20c1.5 0 2-1 2-2s-.5-1.5-.5-2 .5-1 1.5-1h2a3 3 0 003-3c0-6-4-12-8-12z"/><circle cx="7" cy="10" r="1" fill="currentColor"/><circle cx="9" cy="6" r="1" fill="currentColor"/><circle cx="15" cy="6" r="1" fill="currentColor"/><circle cx="17" cy="10" r="1" fill="currentColor"/>',
+        users: '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>',
+        pause: '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
     };
     function icon(name) {
         return '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[name] || '') + '</svg>';
@@ -425,6 +427,9 @@
         document.querySelectorAll('[data-page]').forEach(el => {
             el.classList.toggle('active-link', el.dataset.page === page);
         });
+        if (currentPage === 'about' && page !== 'about') {
+            pauseAboutVideo();
+        }
         currentPage = page;
         closeMobileMenu();
         closeCourseDrawer();
@@ -434,6 +439,7 @@
             case 'dashboard': renderDashboard(); break;
             case 'course': renderCourse(params.moduleIdx, params.lessonIdx); break;
             case 'curriculum': renderCurriculum(); break;
+            case 'about': renderAbout(params); break;
         }
     }
 
@@ -653,6 +659,204 @@
     }
 
     /* ============================================================
+       RENDER: ABOUT US & CINEMA VIDEO PLAYER
+    ============================================================ */
+    let aboutVideoInitialized = false;
+
+    function pauseAboutVideo() {
+        const vid = document.getElementById('about-video-element');
+        if (vid && !vid.paused) {
+            vid.pause();
+        }
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) return '00:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+    }
+
+    function initAboutVideoPlayer() {
+        if (aboutVideoInitialized) return;
+        aboutVideoInitialized = true;
+
+        const video = document.getElementById('about-video-element');
+        const bigPlayBtn = document.getElementById('about-big-play-btn');
+        const playBtn = document.getElementById('vc-play-btn');
+        const rewindBtn = document.getElementById('vc-rewind-btn');
+        const fwdBtn = document.getElementById('vc-forward-btn');
+        const progressContainer = document.getElementById('video-progress-container');
+        const progressFill = document.getElementById('video-progress-fill');
+        const progressHandle = document.getElementById('video-progress-handle');
+        const timeCurrent = document.getElementById('vc-time-current');
+        const timeDuration = document.getElementById('vc-time-duration');
+        const volBtn = document.getElementById('vc-volume-btn');
+        const volRange = document.getElementById('vc-volume-range');
+        const speedSelect = document.getElementById('vc-playback-rate');
+        const fsBtn = document.getElementById('vc-fullscreen-btn');
+        const videoWrapper = document.getElementById('about-video-wrapper');
+        const jumpToVideoBtn = document.getElementById('btn-jump-to-video');
+
+        if (!video) return;
+
+        function updatePlayPauseUI(isPlaying) {
+            if (bigPlayBtn) {
+                bigPlayBtn.classList.toggle('playing', isPlaying);
+            }
+            if (playBtn) {
+                playBtn.innerHTML = isPlaying
+                    ? '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+                    : '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg>';
+            }
+        }
+
+        function togglePlay() {
+            if (video.paused || video.ended) {
+                video.play().catch(function (err) {
+                    console.log('Video autoplay prevented:', err);
+                });
+            } else {
+                video.pause();
+            }
+        }
+
+        if (bigPlayBtn) bigPlayBtn.addEventListener('click', togglePlay);
+        if (playBtn) playBtn.addEventListener('click', togglePlay);
+        video.addEventListener('click', togglePlay);
+
+        video.addEventListener('play', function () {
+            updatePlayPauseUI(true);
+        });
+
+        video.addEventListener('pause', function () {
+            updatePlayPauseUI(false);
+        });
+
+        video.addEventListener('ended', function () {
+            updatePlayPauseUI(false);
+            if (progressFill) progressFill.style.width = '100%';
+            if (progressHandle) progressHandle.style.left = '100%';
+        });
+
+        // Time update & Scrubber
+        video.addEventListener('timeupdate', function () {
+            if (!video.duration) return;
+            const pct = (video.currentTime / video.duration) * 100;
+            if (progressFill) progressFill.style.width = pct + '%';
+            if (progressHandle) progressHandle.style.left = pct + '%';
+            if (timeCurrent) timeCurrent.textContent = formatTime(video.currentTime);
+            if (timeDuration && !isNaN(video.duration)) timeDuration.textContent = formatTime(video.duration);
+            if (progressContainer) progressContainer.setAttribute('aria-valuenow', Math.round(pct));
+        });
+
+        video.addEventListener('loadedmetadata', function () {
+            if (timeDuration && !isNaN(video.duration)) {
+                timeDuration.textContent = formatTime(video.duration);
+            }
+        });
+
+        // Seeking
+        if (progressContainer) {
+            function seek(e) {
+                const rect = progressContainer.getBoundingClientRect();
+                const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                if (video.duration) {
+                    video.currentTime = pos * video.duration;
+                }
+            }
+            let isDragging = false;
+            progressContainer.addEventListener('mousedown', function (e) {
+                isDragging = true;
+                seek(e);
+            });
+            window.addEventListener('mousemove', function (e) {
+                if (isDragging) seek(e);
+            });
+            window.addEventListener('mouseup', function () {
+                isDragging = false;
+            });
+            progressContainer.addEventListener('touchstart', function (e) {
+                if (e.touches && e.touches.length > 0) seek(e.touches[0]);
+            }, { passive: true });
+        }
+
+        // -10s / +10s
+        if (rewindBtn) {
+            rewindBtn.addEventListener('click', function () {
+                video.currentTime = Math.max(0, video.currentTime - 10);
+                showToast('⏪ Rewound 10 seconds', 'info');
+            });
+        }
+        if (fwdBtn) {
+            fwdBtn.addEventListener('click', function () {
+                if (video.duration) {
+                    video.currentTime = Math.min(video.duration, video.currentTime + 10);
+                } else {
+                    video.currentTime += 10;
+                }
+                showToast('⏩ Forwarded 10 seconds', 'info');
+            });
+        }
+
+        // Volume & Mute
+        function updateVolumeUI() {
+            if (!volBtn) return;
+            if (video.muted || video.volume === 0) {
+                volBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+            } else {
+                volBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>';
+            }
+        }
+
+        if (volBtn) {
+            volBtn.addEventListener('click', function () {
+                video.muted = !video.muted;
+                updateVolumeUI();
+            });
+        }
+
+        if (volRange) {
+            volRange.addEventListener('input', function () {
+                video.volume = parseFloat(this.value);
+                video.muted = (video.volume === 0);
+                updateVolumeUI();
+            });
+        }
+
+        // Speed
+        if (speedSelect) {
+            speedSelect.addEventListener('change', function () {
+                video.playbackRate = parseFloat(this.value);
+                showToast('Playback speed set to ' + this.value + 'x', 'info');
+            });
+        }
+
+        // Fullscreen
+        if (fsBtn && videoWrapper) {
+            fsBtn.addEventListener('click', function () {
+                if (!document.fullscreenElement) {
+                    if (videoWrapper.requestFullscreen) videoWrapper.requestFullscreen();
+                    else if (videoWrapper.webkitRequestFullscreen) videoWrapper.webkitRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                }
+            });
+        }
+
+    }
+
+    function renderAbout(params) {
+        initAboutVideoPlayer();
+        if (params && params.autoplay) {
+            const video = document.getElementById('about-video-element');
+            if (video) {
+                video.play().catch(function () {});
+            }
+        }
+    }
+
+    /* ============================================================
        ACTIONS
     ============================================================ */
     function markComplete(modIdx, lessonIdx) {
@@ -822,7 +1026,8 @@
         const navItems = [
             { page: 'dashboard', label: 'Home', icon: 'home' },
             { page: 'course', label: 'Course', icon: 'play' },
-            { page: 'curriculum', label: 'Curriculum', icon: 'book-open' }
+            { page: 'curriculum', label: 'Curriculum', icon: 'book-open' },
+            { page: 'about', label: 'About Us', icon: 'users' }
         ];
         document.getElementById('main-nav').innerHTML = navItems.map(n =>
             '<button class="nav-link" data-page="' + n.page + '">' + icon(n.icon) + '<span>' + n.label + '</span></button>'
@@ -835,9 +1040,11 @@
         const icHome = document.getElementById('mbb-icon-home');
         const icCourse = document.getElementById('mbb-icon-course');
         const icCurriculum = document.getElementById('mbb-icon-curriculum');
+        const icAbout = document.getElementById('mbb-icon-about');
         if (icHome) icHome.innerHTML = icon('home');
         if (icCourse) icCourse.innerHTML = icon('play');
         if (icCurriculum) icCurriculum.innerHTML = icon('book-open');
+        if (icAbout) icAbout.innerHTML = icon('users');
 
         // inject static icons
         document.getElementById('hamburger-btn').innerHTML = icon('menu');

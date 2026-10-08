@@ -171,6 +171,38 @@
           <div class="module-cards-grid" id="module-cards"></div>
         </div>
       </div>
+
+      <!-- ============ ABOUT US SPOTLIGHT TEASER (HOME) ============ -->
+      <section class="container home-about-spotlight">
+        <div class="has-card">
+          <div class="has-content">
+            <span class="has-eyebrow">ABOUT THE PLATFORM</span>
+            <h2>Master Web Development Without Language Barriers</h2>
+            <p>160+ structured video lessons in Hindi &amp; Tamil — from HTML basics to React, Python, and deployment. Free and built for college developers.</p>
+            <div class="has-actions">
+              <button class="btn btn-primary" data-page="about">
+                <span>Watch Story &amp; About Us</span>
+                <span class="has-arrow">→</span>
+              </button>
+              <button class="btn btn-outline" data-page="course" data-module="0">
+                <span>Start Learning Free</span>
+              </button>
+            </div>
+          </div>
+          <div class="has-video-preview" data-page="about" title="Watch platform overview">
+            <div class="has-video-thumb-box">
+              <video src="about-us.mp4" muted preload="metadata" poster="logo.jpg" class="has-video-thumb"></video>
+              <div class="has-play-overlay">
+                <div class="has-play-icon">▶</div>
+                <div class="has-play-meta">
+                  <strong>Course &amp; Mission Tour</strong>
+                  <span>Watch Video (HI • TA)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </section>
 
     <!-- ============ COURSE (VIDEO PLAYER) ============ -->
@@ -187,10 +219,172 @@
       <div class="container" style="padding-top:24px;padding-bottom:60px;">
         <div style="margin-bottom:24px;">
           <h1 style="font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;margin-bottom:6px;">Full Course Curriculum</h1>
-          <p class="muted">Complete week-by-week breakdown of your 4-month learning journey across 11 modules and 160+
-            lessons.</p>
+          <p class="muted">Complete week-by-week breakdown of your 4-month learning journey across 11 modules and 160+ lessons.</p>
         </div>
         <div id="curriculum-content"></div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT US (PREMIUM, SLEEK & RESPONSIVE) ============ -->
+    <section id="page-about" class="page">
+      <div class="container about-clean-wrapper">
+        
+        <!-- Clean Hero Header -->
+        <header class="about-clean-hero">
+          <span class="about-clean-badge">💡 Abbas Skill Platform • Our Mission & Story</span>
+          <h1 class="about-clean-title">
+            Empowering Future Developers. <br>
+            <span class="text-gradient">Taught in Your Native Language.</span>
+          </h1>
+          <p class="about-clean-desc">
+            Democratizing tech education across India. With 160+ structured video lessons, hands-on projects, and interactive quizzes in Hindi and Tamil, we help college students become job-ready full-stack software engineers.
+          </p>
+          <div class="about-clean-actions">
+            <button class="btn btn-primary" data-page="course" data-module="0">
+              Start Learning Free 🚀
+            </button>
+            <button class="btn btn-outline" data-page="curriculum">
+              Explore 160+ Lessons 📚
+            </button>
+          </div>
+        </header>
+
+        <!-- Premium Cinema Video Showcase -->
+        <div class="about-cinema-box" id="about-video-section">
+          <div class="cinema-player-card">
+            
+            <!-- Video Player Screen -->
+            <div class="cinema-screen" id="about-video-wrapper">
+              <video id="about-video-element" playsinline preload="metadata" poster="logo.jpg">
+                <source src="about-us.mp4" type="video/mp4">
+                Your browser does not support HTML5 video.
+              </video>
+
+              <!-- Minimalist Frosted Center Play Button -->
+              <button class="cinema-play-btn" id="about-big-play-btn" aria-label="Play or Pause Video">
+                <div class="cinema-play-circle">
+                  <svg id="big-play-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="6 4 20 12 6 20"></polygon>
+                  </svg>
+                </div>
+              </button>
+
+              <!-- Sleek Floating Control Bar -->
+              <div class="cinema-controls" id="custom-video-controls">
+                <!-- Smooth Scrubber -->
+                <div class="cinema-progress-wrap" id="video-progress-container" role="slider" aria-label="Seek video" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+                  <div class="cinema-progress-track">
+                    <div class="cinema-progress-fill" id="video-progress-fill"></div>
+                    <div class="cinema-progress-thumb" id="video-progress-handle"></div>
+                  </div>
+                </div>
+
+                <!-- Control Buttons Row -->
+                <div class="cinema-bar">
+                  <div class="cinema-bar-left">
+                    <button class="cinema-ctrl-btn" id="vc-play-btn" aria-label="Play/Pause" title="Play/Pause">
+                      <svg id="vc-play-svg" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21"></polygon>
+                      </svg>
+                    </button>
+                    <button class="cinema-ctrl-btn cinema-skip-btn" id="vc-rewind-btn" title="Rewind 10s">
+                      <span>-10s</span>
+                    </button>
+                    <button class="cinema-ctrl-btn cinema-skip-btn" id="vc-forward-btn" title="Forward 10s">
+                      <span>+10s</span>
+                    </button>
+                    <div class="cinema-time-box">
+                      <span id="vc-time-current">00:00</span>
+                      <span class="cinema-time-slash">/</span>
+                      <span id="vc-time-duration">00:00</span>
+                    </div>
+                  </div>
+
+                  <div class="cinema-bar-right">
+                    <button class="cinema-ctrl-btn" id="vc-volume-btn" aria-label="Mute/Unmute" title="Mute/Unmute">
+                      <svg id="vc-vol-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"></path>
+                      </svg>
+                    </button>
+                    <select id="vc-playback-rate" class="cinema-speed-select" aria-label="Playback Speed">
+                      <option value="0.75">0.75x</option>
+                      <option value="1" selected>1.0x</option>
+                      <option value="1.25">1.25x</option>
+                      <option value="1.5">1.5x</option>
+                    </select>
+                    <button class="cinema-ctrl-btn" id="vc-fullscreen-btn" aria-label="Toggle Fullscreen" title="Fullscreen">
+                      <svg id="vc-fs-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sleek Minimalist Caption Row -->
+            <div class="cinema-meta-row">
+              <div class="cinema-meta-text">
+                <h3>Official Platform Overview</h3>
+                <p>Complete curriculum breakdown, dual-language audio tour, and hands-on developer roadmap.</p>
+              </div>
+              <div class="cinema-meta-pill">
+                <span>🇮🇳 Hindi &amp; Tamil</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 3 Refined Value Cards (Clean, Responsive, Cohesive) -->
+        <div class="about-clean-grid">
+          <div class="clean-card">
+            <div class="clean-card-icon">⚡</div>
+            <h3>160+ Structured Lessons</h3>
+            <p>From HTML5 and CSS3 fundamentals to modern React 19, Python backend, and Git cloud workflows.</p>
+          </div>
+          <div class="clean-card">
+            <div class="clean-card-icon">🌐</div>
+            <h3>Bilingual Pedagogy</h3>
+            <p>Seamless 1-click toggle between native Hindi (हिन्दी) and Tamil (தமிழ்) for intuitive concept clarity.</p>
+          </div>
+          <div class="clean-card">
+            <div class="clean-card-icon">🎯</div>
+            <h3>100% Free College Initiative</h3>
+            <p>Interactive milestone quizzes and automated browser progress tracking with zero fees or subscriptions.</p>
+          </div>
+        </div>
+
+        <!-- Refined Founder Card -->
+        <div class="about-clean-mentor">
+          <div class="mentor-clean-avatar">
+            <img src="logo.jpg" alt="Abbas - Instructor &amp; Platform Creator" class="mentor-img">
+          </div>
+          <div class="mentor-clean-content">
+            <span class="mentor-tag">LEAD INSTRUCTOR &amp; FOUNDER</span>
+            <h2>Abbas</h2>
+            <p class="mentor-tagline">Full Stack Developer &amp; Educator</p>
+            <blockquote class="mentor-clean-quote">
+              “Language should never be an obstacle to your potential. When you understand core programming concepts in your native tongue, technical confidence replaces hesitation.”
+            </blockquote>
+          </div>
+        </div>
+
+        <!-- Clean Call To Action -->
+        <div class="about-clean-cta">
+          <h2>Ready to Begin Your Journey?</h2>
+          <p>Start with Lesson 1 today — free, self-paced, and saved automatically.</p>
+          <div class="clean-cta-buttons">
+            <button class="btn btn-primary btn-lg" data-page="course" data-module="0">
+              Start Learning Now 🚀
+            </button>
+            <button class="btn btn-outline btn-lg" data-page="curriculum">
+              View All 160+ Lessons 📚
+            </button>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -205,6 +399,12 @@
           <span class="brand-tag" style="font-size:.58rem;">SKILL PLATFORM</span>
         </span>
       </div>
+      <nav class="footer-nav-links" aria-label="Footer navigation">
+        <button class="footer-nav-link" data-page="dashboard">Home</button>
+        <button class="footer-nav-link" data-page="course">Course</button>
+        <button class="footer-nav-link" data-page="curriculum">Curriculum</button>
+        <button class="footer-nav-link" data-page="about">About Us</button>
+      </nav>
       <p class="footer-copy">© 2025 Abbas Skill Platform — AI Enabled Full Stack Development Course. All progress is
         saved automatically.</p>
     </div>
@@ -223,6 +423,10 @@
     <button class="mbb-item" data-page="curriculum">
       <span id="mbb-icon-curriculum"></span>
       <span>Curriculum</span>
+    </button>
+    <button class="mbb-item" data-page="about">
+      <span id="mbb-icon-about"></span>
+      <span>About</span>
     </button>
   </nav>
 
