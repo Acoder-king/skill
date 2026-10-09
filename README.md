@@ -17,7 +17,7 @@ A modern, responsive e-learning web platform for Full Stack Development by **Abb
 
 ## 📚 Curriculum Outline
 
-1. **AspiraSys Intro & Career Guidance**
+1. **Platform Intro & Career Guidance**
 2. **Web Basics & Developer Tools** (VS Code, Git & GitHub, Netlify)
 3. **HTML5 Mastery**
 4. **CSS3 & Responsive Design**
@@ -38,6 +38,14 @@ npx serve .
 ```
 
 Then visit [http://localhost:3000](http://localhost:3000).
+
+## 📬 Connect & Mentorship
+
+Have questions about the roadmap, curriculum, or career guidance? Reach out directly to the creator:
+
+- **Instagram**: [@its_abbas.dev](https://www.instagram.com/its_abbas.dev?obrf=ZW00OG4yZnoyOHoz)
+- **LinkedIn**: [Mohammed Abbas](https://www.linkedin.com/in/mohammedabbas-ry)
+- **Phone / WhatsApp**: [+91 63699 06810](tel:+916369906810)
 
 ## 📄 License
 

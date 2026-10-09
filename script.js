@@ -42,7 +42,10 @@
         cloud: '<path d="M7 18a4 4 0 010-8 6 6 0 0111.5-1.5A4.5 4.5 0 0117 18H7z"/>',
         palette: '<path d="M12 2a10 10 0 000 20c1.5 0 2-1 2-2s-.5-1.5-.5-2 .5-1 1.5-1h2a3 3 0 003-3c0-6-4-12-8-12z"/><circle cx="7" cy="10" r="1" fill="currentColor"/><circle cx="9" cy="6" r="1" fill="currentColor"/><circle cx="15" cy="6" r="1" fill="currentColor"/><circle cx="17" cy="10" r="1" fill="currentColor"/>',
         users: '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>',
-        pause: '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+        pause: '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>',
+        instagram: '<rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>',
+        linkedin: '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>',
+        phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>'
     };
     function icon(name) {
         return '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[name] || '') + '</svg>';
@@ -53,15 +56,14 @@
     ============================================================ */
     const COURSE_MODULES = [
         {
-            id: 'aspirasys-intro',
-            name: 'AspiraSys Introduction',
+            id: 'platform-intro',
+            name: 'Platform Intro & Career Guidance',
             icon: 'compass',
             color: '#1d4ed8',
             week: 'Week 1',
-            description: 'Introduction to AspiraSys and career guidance',
+            description: 'Platform overview, learning roadmap & IT career guidance',
             lessons: [
-                { topic: 'AspiraSys Introduction', hindi: 'https://youtu.be/Y000saOU8RE?si=x42vEKQ8dhUKXuYM', tamil: 'https://youtu.be/Y000saOU8RE?si=x42vEKQ8dhUKXuYM', type: 'video' },
-                { topic: 'Quiz: AspiraSys Intro 1', hindi: 'https://as-intro-1.netlify.app', tamil: 'https://as-intro-1.netlify.app', type: 'quiz' },
+                { topic: 'Abbas Skill Platform Overview', hindi: 'aspvideo.mp4', tamil: 'aspvideo.mp4', type: 'video' },
                 { topic: 'Unlock Your Dream IT Career', hindi: 'https://youtu.be/Lmm_FHz1L88?si=1aymDj2tt_GlitCN', tamil: 'https://youtu.be/Lmm_FHz1L88?si=1aymDj2tt_GlitCN', type: 'video' },
                 { topic: 'Quiz: Career Guidance', hindi: 'https://as-intro-2.netlify.app', tamil: 'https://as-intro-2.netlify.app', type: 'quiz' },
                 { topic: 'HIGH-PAYING Career Formula', hindi: 'https://youtu.be/eK5jC3l0rQc?si=Ni8EiImizj9a5dj5', tamil: 'https://youtu.be/eK5jC3l0rQc?si=Ni8EiImizj9a5dj5', type: 'video' },
@@ -339,7 +341,20 @@
     function loadState() {
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
-            if (raw) return Object.assign(defaultState(), JSON.parse(raw));
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed.completedLessons && parsed.completedLessons['aspirasys-intro']) {
+                    const old = parsed.completedLessons['aspirasys-intro'];
+                    const updated = [];
+                    if (old.includes(0)) updated.push(0);
+                    old.forEach(idx => {
+                        if (idx > 1) updated.push(idx - 1);
+                    });
+                    parsed.completedLessons['platform-intro'] = updated;
+                    delete parsed.completedLessons['aspirasys-intro'];
+                }
+                return Object.assign(defaultState(), parsed);
+            }
         } catch (e) { }
         return defaultState();
     }
@@ -430,6 +445,10 @@
         if (currentPage === 'about' && page !== 'about') {
             pauseAboutVideo();
         }
+        if (currentPage === 'course' && page !== 'course') {
+            const courseVid = document.querySelector('#course-main video');
+            if (courseVid) courseVid.pause();
+        }
         currentPage = page;
         closeMobileMenu();
         closeCourseDrawer();
@@ -498,7 +517,7 @@
         const drawerHeader = '<div class="sidebar-drawer-header">' +
             '<div style="display:flex;align-items:center;gap:10px;">' +
             '<span style="font-size:1.15rem;">📚</span>' +
-            '<div><div style="font-size:.86rem;font-weight:800;color:var(--navy);">Course Curriculum</div><div style="font-size:.7rem;color:var(--slate-500);">11 Modules • 160 Lessons</div></div>' +
+            '<div><div style="font-size:.86rem;font-weight:800;color:var(--navy);">Course Curriculum</div><div style="font-size:.7rem;color:var(--slate-500);">' + COURSE_MODULES.length + ' Modules • ' + getTotalLessons() + ' Lessons</div></div>' +
             '</div>' +
             '<button class="icon-btn" data-action="close-course-drawer" aria-label="Close menu">' + icon('x') + '</button>' +
             '</div>';
@@ -538,6 +557,7 @@
         const completedArr = state.completedLessons[mod.id] || [];
         const isDone = completedArr.includes(lessonIdx);
         const isQuiz = lesson.type === 'quiz';
+        const isLocalVideo = url && (url.endsWith('.mp4') || url.includes('.mp4') || url.endsWith('.webm'));
 
         // Mobile quick selector bar
         const mobileBarHTML = '<div class="mobile-course-bar">' +
@@ -549,7 +569,7 @@
             '<span class="mcb-title">' + (lesson.type === 'quiz' ? '📝 ' : '') + lesson.topic + '</span>' +
             '</div>' +
             '</div>' +
-            '<span class="mcb-arrow">' + icon('chevron-right') + ' 160 Lessons</span>' +
+            '<span class="mcb-arrow">' + icon('chevron-right') + ' ' + getTotalLessons() + ' Lessons</span>' +
             '</button>' +
             '</div>';
 
@@ -562,6 +582,12 @@
                 '<p style="opacity:.75;margin-bottom:20px;font-size:.88rem;">Interactive quiz for ' + mod.name + '. Test your understanding!</p>' +
                 '<a href="' + url + '" target="_blank" rel="noopener" class="btn btn-primary btn-lg" style="text-decoration:none;">Open Quiz in New Tab ' + icon('external-link') + '</a>' +
                 '</div>' +
+                '</div>';
+        } else if (isLocalVideo) {
+            videoHTML = '<div class="video-container" style="background:#000;">' +
+                '<video src="' + url + '" controls playsinline poster="logo.jpg" preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;">' +
+                'Your browser does not support HTML5 video.' +
+                '</video>' +
                 '</div>';
         } else if (ytId) {
             videoHTML = '<div class="video-container"><iframe src="https://www.youtube.com/embed/' + ytId + '?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" title="' + lesson.topic + '"></iframe></div>';
@@ -615,7 +641,10 @@
                 '<button class="btn btn-secondary" disabled>' + icon('check-circle') + ' Completed</button>' :
                 '<button class="btn btn-primary" data-action="mark-complete" data-mod="' + modIdx + '" data-lesson="' + lessonIdx + '">' + icon('check') + ' Mark as Complete</button>'
             ) +
-            (url && url.startsWith('http') ? '<a href="' + url + '" target="_blank" rel="noopener" class="btn btn-outline" style="text-decoration:none;">' + icon('external-link') + ' Open in YouTube</a>' : '') +
+            (isLocalVideo ?
+                '<button class="btn btn-outline" data-page="about">' + icon('users') + ' Watch in Cinema Player</button>' :
+                (url && url.startsWith('http') && !isQuiz ? '<a href="' + url + '" target="_blank" rel="noopener" class="btn btn-outline" style="text-decoration:none;">' + icon('external-link') + ' Open in YouTube</a>' : '')
+            ) +
             '</div>' +
             '<div class="lesson-nav">' +
             (hasPrev ? '<button class="btn btn-ghost" data-action="prev-lesson">' + icon('arrow-left') + ' Previous</button>' : '<span></span>') +
@@ -1062,6 +1091,15 @@
                     case 'prev-lesson': prevLesson(); break;
                 }
                 return;
+            }
+            const scrollEl = e.target.closest('[data-scroll]');
+            if (scrollEl) {
+                const targetId = scrollEl.dataset.scroll;
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
             }
             const pageEl = e.target.closest('[data-page]');
             if (pageEl) {
