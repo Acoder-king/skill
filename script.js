@@ -700,9 +700,36 @@
 
         if (!video) return;
 
+        if (videoWrapper) videoWrapper.classList.add('is-paused');
+        updatePlayPauseUI(false);
+
+        let hideControlsTimeout = null;
+        function showControlsTemporarily() {
+            if (!videoWrapper) return;
+            videoWrapper.classList.add('show-controls');
+            if (hideControlsTimeout) clearTimeout(hideControlsTimeout);
+            if (!video.paused && !video.ended) {
+                hideControlsTimeout = setTimeout(function () {
+                    videoWrapper.classList.remove('show-controls');
+                }, 2800);
+            }
+        }
+
+        if (videoWrapper) {
+            videoWrapper.addEventListener('mousemove', showControlsTemporarily);
+            videoWrapper.addEventListener('touchstart', function () {
+                showControlsTemporarily();
+            }, { passive: true });
+        }
+
         function updatePlayPauseUI(isPlaying) {
             if (bigPlayBtn) {
                 bigPlayBtn.classList.toggle('playing', isPlaying);
+                bigPlayBtn.style.display = isPlaying ? 'none' : 'flex';
+            }
+            if (videoWrapper) {
+                videoWrapper.classList.toggle('is-playing', isPlaying);
+                videoWrapper.classList.toggle('is-paused', !isPlaying);
             }
             if (playBtn) {
                 playBtn.innerHTML = isPlaying
@@ -723,18 +750,65 @@
 
         if (bigPlayBtn) bigPlayBtn.addEventListener('click', togglePlay);
         if (playBtn) playBtn.addEventListener('click', togglePlay);
-        video.addEventListener('click', togglePlay);
+        video.addEventListener('click', function (e) {
+            // On desktop click toggles play; on mobile tap shows controls if hidden
+            if (videoWrapper && !videoWrapper.classList.contains('show-controls') && !video.paused) {
+                showControlsTemporarily();
+            } else {
+                togglePlay();
+            }
+        });
+
+        // Double-tap to seek on touch screens (Mobile YouTube style)
+        let lastTapTime = 0;
+        video.addEventListener('touchend', function (e) {
+            const currentTime = new Date().getTime();
+            const tapGap = currentTime - lastTapTime;
+            const touch = e.changedTouches ? e.changedTouches[0] : null;
+            if (touch && tapGap < 340 && tapGap > 0) {
+                const rect = video.getBoundingClientRect();
+                const tapX = touch.clientX - rect.left;
+                if (tapX < rect.width * 0.42) {
+                    video.currentTime = Math.max(0, video.currentTime - 10);
+                    showToast('⏪ Rewound 10s', 'info');
+                    if (e.cancelable) e.preventDefault();
+                } else if (tapX > rect.width * 0.58) {
+                    if (video.duration) {
+                        video.currentTime = Math.min(video.duration, video.currentTime + 10);
+                    } else {
+                        video.currentTime += 10;
+                    }
+                    showToast('⏩ Forwarded 10s', 'info');
+                    if (e.cancelable) e.preventDefault();
+                }
+            }
+            lastTapTime = currentTime;
+        });
 
         video.addEventListener('play', function () {
             updatePlayPauseUI(true);
+            if (videoWrapper) {
+                videoWrapper.classList.remove('is-paused');
+            }
+            showControlsTemporarily();
         });
 
         video.addEventListener('pause', function () {
             updatePlayPauseUI(false);
+            if (videoWrapper) {
+                videoWrapper.classList.add('is-paused');
+                videoWrapper.classList.add('show-controls');
+            }
+            if (hideControlsTimeout) clearTimeout(hideControlsTimeout);
         });
 
         video.addEventListener('ended', function () {
             updatePlayPauseUI(false);
+            if (videoWrapper) {
+                videoWrapper.classList.add('is-paused');
+                videoWrapper.classList.add('show-controls');
+            }
+            if (hideControlsTimeout) clearTimeout(hideControlsTimeout);
             if (progressFill) progressFill.style.width = '100%';
             if (progressHandle) progressHandle.style.left = '100%';
         });
